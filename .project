@@ -1,6 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <projectDescription>
+<<<<<<< HEAD
 	<name>034 - DiskCarnes - Git</name>
+=======
+	<name>DiskCarnes</name>
+>>>>>>> branch 'master' of https://github.com/filipenanclarez/totvs-034.git
 	<comment></comment>
 	<projects>
 	</projects>
