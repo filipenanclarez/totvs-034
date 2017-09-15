@@ -163,19 +163,7 @@ User Function GravaDados(cNewEmp /*Empresa*/ , cNewFil /*Filial*/ ,;
 	RpcSetEnv( cNewEmp, cNewFil,,,cMod)
 	
 	For nItens := 1 To Len(aConteu)
-	
-
-		
-		/*
-		if INCLUI 
-			RecLock(cAlias, .T.)
-		else if ALTERA
-			RecLock(cAlias, .T.)
-		end if
-		*/
-		
-		
-		
+				
 		If nOpc == 1
 		
 			RecLock(cAlias, .T.)
@@ -216,18 +204,13 @@ User Function GravaDados(cNewEmp /*Empresa*/ , cNewFil /*Filial*/ ,;
 				conout ('Não encontrei o registro com chave = ' + cIndCont)
 				return .f.
 			End If
-			
-			
+						
 		End If 
-
-		
 		
 	Next nItens
 	
 	RestArea(aArea)
 	
 	RpcClearEnv()
-	
-	//conout('nOpc ' + cValToChar(nOpc))
 
 Return lRet

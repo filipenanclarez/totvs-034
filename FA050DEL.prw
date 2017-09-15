@@ -1,0 +1,7 @@
+#Include "PROTHEUS.CH"
+
+USER FUNCTION Fa050DEL()
+	
+	U_REPLICADADOS('FIN',{'SE2'},3,1,&(IndexKey(1)))	
+		
+RETURN
