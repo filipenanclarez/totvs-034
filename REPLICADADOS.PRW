@@ -50,12 +50,13 @@ User Function REPLICADADOS(cMod /*Módulo*/, aTabelas /*Tabela*/, nOpc /*1=Inclui
 	endif
 
 	For ni := 1 to len(aTabelas)
+		
 		aEstCab	:= {}
 		aContCab:= {}
 		aEstGet	:= {}
 		aContGet:= {}
 		cAlias	:= aTabelas[ni]
-		
+				
 		DbSelectArea(cAlias)
 		
 		aEstCab := (cAlias)->(DbStruct())
@@ -161,6 +162,9 @@ User Function GravaDados(cNewEmp /*Empresa*/ , cNewFil /*Filial*/ ,;
 	
 	RpcSetType( 3 )
 	RpcSetEnv( cNewEmp, cNewFil,,,cMod)
+	
+	// se não tiver, ele vai tentar criar a tabela
+	chkfile(cAlias)
 	
 	For nItens := 1 To Len(aConteu)
 				
