@@ -29,31 +29,33 @@ cIndChave= chave para busca
 */
 User Function REPLICADADOS(cMod /*Módulo*/, aTabelas /*Tabela*/, nOpc /*1=Inclui, 2=Altera, 3=Exclui*/ ,;
 nInd /*Indice*/, cIndCont /*conteudo da chave para busca*/,cIndChave/*Chave do indice*/)
+
 Local aArea		:= GetArea()
-Local aAreaSC6	:= SC6->(GetArea())
-Local aAreaSC5	:= SC5->(GetArea())
-Local aAreaSF2	:= SF2->(GetArea())
-Local aAreaSD2	:= SD2->(GetArea())
-Local aAreaSE1	:= SE1->(GetArea())
 Local aEstCab	:= {}
 Local aContCab	:= {}
 Local aEstGet	:= {}
 Local aContGet	:= {}
-Local aTabelas	:= aTabelas
 Local cNewAlias	:= ""
 Local cAlias	:= ""
+//Local aTabelas	:= aTabelas 
+Local cquery := ""
+
 if nOpc == 1
-	cquery := "DELETE FROM SC5020; "
-	cquery += "DELETE FROM SC6020; "
-	cquery += "DELETE FROM SF2020; "
-	cquery += "DELETE FROM SD2020; "
-	cquery += "DELETE FROM SF3020; "
-	cquery += "DELETE FROM SE1020; "
-	cquery += "DELETE FROM SFT020; "
-	cquery += "DELETE FROM CD2020; "
-	cquery += "DELETE FROM SC9020; "
+//	cquery := "DELETE FROM SC5020; "
+//	cquery += "DELETE FROM SC6020; "
+//	cquery += "DELETE FROM SF2020; "
+//	cquery += "DELETE FROM SD2020; "
+//	cquery += "DELETE FROM SF3020; "
+//	cquery += "DELETE FROM SE1020; "
+//	cquery += "DELETE FROM SFT020; "
+//	cquery += "DELETE FROM CD2020; "
+//	cquery += "DELETE FROM SC9020; "
+	cquery += "DELETE FROM SF1020; "
+	cquery += "DELETE FROM SD1020; "
+	cquery += "DELETE FROM SE2020; "
 	nStatus := TCSqlExec(cquery)
 endif
+
 For ni := 1 to len(aTabelas)
 	
 	aEstCab	:= {}
@@ -121,21 +123,40 @@ For ni := 1 to len(aTabelas)
 				(cNewAlias)->(DbSkip())
 			EndDo
 		EndIf
+		
+	elseif (cAlias == "SF1")
+		
+		cNewAlias := "SD1"
+		
+		DbSelectArea(cNewAlias)
+		DbSetOrder(1)
+		If DbSeek(xFilial(cNewAlias)+ SF1->F1_DOC + SF1->F1_SERIE + SF1->F1_FORNECE + SF1->F1_LOJA)
+			
+			aEstGet := (cNewAlias)->(DbStruct())
+			nItens := 1
+			While (!Eof(cNewAlias)) .And. (xFilial(cAlias) == xFilial(cNewAlias)) .and. SF1->F1_DOC = (cNewAlias)->D1_DOC .and. ;
+				SF1->F1_SERIE = (cNewAlias)->D1_SERIE .and. SF1->F1_FORNECE = (cNewAlias)->D1_FORNECE .and. SF1->F1_LOJA = (cNewAlias)->D1_LOJA
+				
+				ProcRegua(Len(aEstGet))
+				aAdd(aContGet,{})
+				For nAtual := 1 To Len(aEstGet)
+					IncProc("Adicionando valores "+cNewAlias+" ("+cValToChar(nAtual)+" de "+cValToChar(Len(aEstGet))+")...")
+					aAdd(aContGet[nItens], &(cNewAlias+"->"+aEstGet[nAtual][1]))
+				Next nAtual
+				nItens++
+				(cNewAlias)->(DbSkip())
+			EndDo
+		EndIf		
 	endIf
 	
 	StartJob("U_GravaDados",GetEnvServer(), .F.,"02", "01",cAlias,aEstCab,aContCab,cMod,nOpc,nInd,cIndCont,cIndChave)
 	
-	if(cAlias$"SC5*SF2")
+	if(cAlias$"SC5*SF2*SF1")
 		StartJob("U_GravaDados",GetEnvServer(), .F.,"02", "01",cNewAlias,aEstGet,aContGet,cMod,nOpc,nInd,cIndCont,cIndChave)
 	endif
 	
 next ni
 
-RestArea(aAreaSD2)
-RestArea(aAreaSF2)
-RestArea(aAreaSE1)
-RestArea(aAreaSC5)
-RestArea(aAreaSC6)
 RestArea(aArea)
 
 Return Nil
