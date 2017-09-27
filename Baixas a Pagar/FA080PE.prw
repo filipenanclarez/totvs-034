@@ -1,6 +1,6 @@
 #Include "PROTHEUS.CH"
 
-USER FUNCTION FA070TIT()
+USER FUNCTION FA080PE()
 
 	//Verifica tratativa para ler o campo customizado do SE2, para mandar apenas os titulos 
 	//que o cliente escolher
